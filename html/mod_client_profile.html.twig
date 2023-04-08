@@ -1,0 +1,255 @@
+{% extends "layout_default.html.twig" %}
+
+{% block meta_title %}{{ 'My account' | trans }}{% endblock %}
+{% set profile = client.profile_get %}
+
+{% block content %}
+<div class="card">
+	<div class="row g-0">
+		<div class="col-3 d-none d-md-block border-end">
+			<div class="card-body">
+				<div class="list-group list-group-transparent" data-bs-toggle="tabs">
+					<a href="#details-tab" data-bs-toggle="tab" class="list-group-item list-group-item-action d-flex align-items-center active">{{ 'Profile details' | trans }}</a>
+					<a href="#password-tab" data-bs-toggle="tab" class="list-group-item list-group-item-action d-flex align-items-center">{{ 'Password' | trans }}</a>
+					<a href="#api-tab" data-bs-toggle="tab" class="list-group-item list-group-item-action d-flex align-items-center">{{ 'API key' | trans }}</a>
+					<a href="#currency-tab" data-bs-toggle="tab" class="list-group-item list-group-item-action d-flex align-items-center">{{ 'Currency' | trans }}</a>
+				</div>
+			</div>
+		</div>
+		<div class="col d-flex flex-column">
+			<div class="card-body tab-content">
+				{# Profile details tab #}
+				<div class="tab-pane active" id="details-tab">
+					<div class="card-body">
+						<h3 class="card-title">{{ 'Profile details' | trans }}</h3>
+						{# Gravatar image #}
+						<div class="row align-items-center">
+							<div class="col-auto">
+								<img class="avatar avatar-xl" src="{{ profile.email|gravatar }}&size=256" alt="Gravatar image" />
+							</div>
+							<div class="col-auto">
+								{{ 'Please register with' | trans }} <strong>{{ profile.email }}</strong> {{ 'at ' | trans }}<a target="_blank" href="https://gravatar.com">Gravatar.com</a> {{ 'to change your profile image.' | trans }}<br />{{ 'Gravatar image updates may not appear immediately.' | trans }}
+							</div>
+						</div>
+						{# Client information #}
+						<h3 class="card-title mt-4">{{ 'Client information' | trans }}</h3>
+						<div class="row g-3 mb-3">
+							<div class="col-md">
+								<div class="form-label required">{{ 'First name' | trans }}</div>
+								<input type="text" class="form-control" id="first_name" value="{{ profile.first_name }}" required>
+							</div>
+							<div class="col-md">
+								<div class="form-label required">{{ 'Last name' | trans }}</div>
+								<input type="text" class="form-control" id="last_name" value="{{ profile.last_name }}" required>
+							</div>
+							<div class="col-md">
+								<div class="form-label required">{{ 'Email address' | trans }}</div>
+								<input type="text" class="form-control" id="email" value="{{ profile.email }}" required>
+							</div>
+						</div>
+						<div class="row g-3 mb-3">
+							<div class="col-md">
+								{# @TODO: Implement Tabler's datepicker #}
+								<div class="form-label">{{ 'Birth date' | trans }}</div>
+								<input type="date" class="form-control" id="birthday" value="{{ profile.birthday }}">
+							</div>
+							<div class="col-md">
+								{# @TODO: TomSelect.js #}
+								<div class="form-label">{{ 'Gender' | trans }}</div>
+								<select class="form-select" name="gender" id="gender">
+								<option value="male" {{ profile.gender == 'male' ? 'selected' : '' }}>Male</option>
+								<option value="female" {{ profile.gender == 'female' ? 'selected' : '' }}>Female</option>
+								<option value="nonbinary" {{ profile.gender == 'nonbinary' ? 'selected' : '' }}>Non-binary</option>
+								<option value="other" {% if profile.gender not in ['male', 'female', 'nonbinary'] %} selected {% endif %}>Other</option>
+								</select>
+							</div>
+							<div class="col-md">
+								<div class="form-label required">{{ 'Country' | trans }}</div>
+								<select class="form-select" name="country" required>
+									<option value="">{{ '-- Select country --' | trans }}</option>
+									{% for val,label in guest.system_countries %}
+									<option value="{{ val }}" label="{{ label|e }}" {% if val == profile.country %}selected="selected"{% endif %}>{{ label|e }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="row g-3 mb-3">
+							<div class="col-md">
+								<div class="form-label required">{{ 'Phone country code' | trans }}</div>
+								<input type="text" class="form-control" id="phone_cc" value="{{ profile.phone_cc }}" required>
+							</div>
+							<div class="col-md">
+								<div class="form-label required">{{ 'Phone number' | trans }}</div>
+								<input type="text" class="form-control" id="phone" value="{{ profile.phone }}" required>
+							</div>
+							<div class="col-md">
+								<div class="form-label">{{ 'Passport number' | trans }}</div>
+								<input type="text" class="form-control" id="document_nr" value="{{ profile.document_nr }}">
+							</div>
+						</div>
+						<div class="row g-3 mb-3">
+							<div class="col-md-6">
+								<div class="form-label required">{{ 'Address' | trans }}</div>
+								<input type="text" class="form-control" id="address_1" value="{{ profile.address_1 }}" required>
+							</div>
+							<div class="col-md-6">
+								<div class="form-label">{{ 'Address 2' | trans }}</div>
+								<input type="text" class="form-control" id="address_2" value="{{ profile.address_2 }}">
+							</div>
+						</div>
+						<div class="row g-3">
+							<div class="col-md">
+								<div class="form-label required">{{ 'City' | trans }}</div>
+								<input type="text" class="form-control" id="city" value="{{ profile.city }}" required>
+							</div>
+							<div class="col-md">
+								<div class="form-label">{{ 'State' | trans }}</div>
+								<input type="text" class="form-control" id="state" value="{{ profile.state }}">
+							</div>
+							<div class="col-md">
+								<div class="form-label required">{{ 'ZIP/Postal code' | trans }}</div>
+								<input type="text" class="form-control" id="postcode" value="{{ profile.postcode }}" required>
+							</div>
+							{% for i in 1..10 %}
+							{% set custom = 'custom_' ~ i %}
+							{% set current = guest.client_custom_fields[custom] %}
+							{% if current.active %}
+							<div class="col-md">
+								<div class="form-label required">{{ current.title | trans }}</div>
+								<input type="text" class="form-control" id="{{ custom }}" value="{{ profile[custom] }}" {% if current.required %} required {% endif %}>
+							</div>
+							{% endif %}
+							{% endfor %}
+						</div>
+						{# Company information #}
+						<h3 class="card-title mt-4">{{ 'Company information' | trans }}</h3>
+						<div class="row g-3 mb-3">
+							<div class="col-md">
+								<div class="form-label">{{ 'Company name' | trans }}</div>
+								<input type="text" class="form-control" id="company" value="{{ profile.company }}">
+							</div>
+							<div class="col-md">
+								<div class="form-label">{{ 'Company VAT' | trans }}</div>
+								<input type="text" class="form-control" id="company_vat" value="{{ profile.company_vat }}">
+							</div>
+							<div class="col-md">
+								<div class="form-label">{{ 'Company number' | trans }}</div>
+								<input type="text" class="form-control" id="company_number" value="{{ profile.company_number }}">
+							</div>
+						</div>
+					</div>
+					{# @TODO: Make it work #}
+					<div class="card-footer bg-transparent mt-auto">
+						<div class="btn-list justify-content-end">
+							<button type="submit" class="btn btn-primary">{{ 'Submit' | trans }}</button>
+						</div>
+					</div>
+				</div>
+				{# Password tab #}
+				<div class="tab-pane" id="password-tab">
+					<form method="post" action="{{ 'api/client/profile/change_password'|link }}" class="api-form" data-api-msg="{{ 'You have successfully changed your password.' | trans }}">
+						<div class="card-body">
+							<h3 class="card-title">{{ 'Change your password' | trans }}</h3>
+							<div>
+								<div class="mb-3 row">
+									<label class="col-3 col-form-label required">{{ 'Current password' | trans }}</label>
+									<div class="col">
+										<input type="password" class="form-control" name="current_password" id="current_password" required>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label class="col-3 col-form-label required">{{ 'New password' | trans }}</label>
+									<div class="col">
+										<input type="password" class="form-control" name="new_password" id="new_password" required>
+										<small class="form-hint">
+										{{ 'Your new password must be over 8 characters long, contain letters and numbers, and must not contain spaces or emojis.' | trans }}
+										</small>
+									</div>
+								</div>
+								<div class="mb-3 row">
+									<label class="col-3 col-form-label required">{{ 'Confirm your new password' | trans }}</label>
+									<div class="col">
+										<input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer bg-transparent mt-auto">
+							<div class="btn-list justify-content-end">
+								<button type="submit" class="btn btn-primary">{{ 'Submit' | trans }}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				{# API key tab #}
+				<div class="tab-pane" id="api-tab">
+					<form method="post" action="" id="change-api-key">
+						<div class="card-body">
+							<h3 class="card-title">{{ 'API key' | trans }}</h3>
+							<p>{{ 'An API key allows other applications to use your account to perform actions on your behalf. You can generate a new API key at any time.' | trans }}</p>
+							<div>
+								<div class="alert alert-danger" role="alert">
+									<h4 class="alert-title">{{ 'Warning' | trans }}</h4>
+									<div class="text-muted">{{ 'Resetting the key will break existing applications using it.' | trans }}</div>
+								</div>
+								<div class="mb-3 row">
+									<label class="col-3 col-form-label">{{ 'Your API key' | trans }}</label>
+									<div class="col">
+										<input type="text" value="{{ client.profile_api_key_get }}" class="form-control" id="api-key" readonly>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer bg-transparent mt-auto">
+							<div class="btn-list justify-content-end">
+								<button type="submit" class="btn btn-primary">{{ 'Generate new key' | trans }}</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				{# Currency tab #}
+				<div class="tab-pane" id="currency-tab">
+					<div class="card-body">
+						<h3 class="card-title">{{ 'Currency' | trans }}</h3>
+						<p>{{ 'Your profile currency is defined after your first order. Once your currency is set, all of the accounting for your account will be done in that currency and it can not be changed.' | trans }}</p>
+						<div>
+							{% if profile.currency %}
+							<p>{{ 'Your account\'s currency is' | trans }} <strong>{{ profile.currency }}</strong></p>
+							<hr />
+							<p>{{ 'Create a new account if you want to manage your money in another currency.' | trans }}</p>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.getElementById("change-api-key").addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    API.client.post('profile/api_key_reset', {}, function(result) {
+        document.getElementById("api-key").value = result;
+        FOSSBilling.message("{{ 'Your API key was successfully reset.'|trans }}");
+    });
+});
+
+$(function() {
+    $('#profile-update').on('submit', function(event) {
+        bb.post(
+            'client/profile/update',
+            $(this).serialize(),
+            function(result) {
+                bb.msg('Profile updated');
+            }
+        );
+
+        return false;
+    });
+});
+</script>
+{% endblock %}

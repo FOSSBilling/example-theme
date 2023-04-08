@@ -1,0 +1,95 @@
+{#  This is a Twig comment. It will not be rendered in the final HTML.
+    To learn more about Twig, visit https://twig.symfony.com/doc/3.x/ #}    
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block meta_title %}{{ settings.meta_title }}{% endblock %}</title>
+
+    {# These two are used by the API wrapper to make requests #}
+    <meta property="fossbilling:url" content="{{ constant('BB_URL') }}">
+    <meta name="csrf-token" content="{{ CSRFToken }}">
+
+    <meta name="description" content="{% block meta_description %}{{ settings.meta_description }}{% endblock %}">
+    <meta name="robots" content="{{ settings.meta_robots }}">
+    <meta name="author" content="{{ settings.meta_author }}">
+    <meta name="generator" content="FOSSBilling {{ guest.system_version }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# This is a block. Blocks are used for inheritance and act as placeholders at the same time.
+    For example, the blog templates will override this block to add Open Graph tags. 
+    Find out more about blocks here: https://twig.symfony.com/doc/3.x/tags/block.html #}
+    {% block opengraph %}{% endblock %}
+
+    {# The asset_url filter is used to get the public URL of a file in the assets folder.
+    Always use this filter when referencing files in the assets folder. #}
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+
+    <link rel='stylesheet' type='text/css' href="{{ 'css/main.css' | asset_url }}">
+
+    {# Import the API wrapper. This is used to make requests to the API.
+    Just like the asset_url filter, always use the library_url filter when referencing files in the library folder.
+    Make sure to check the documentation for the API wrapper: https://fossbilling.org/docs/api/javascript #}
+    <script src="{{ "Api/API.js?v=#{guest.system_version}" | library_url }}"></script>
+
+    {# Adding another block here so that templates can add their own tags to the head. #}
+    {% block head %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+{% block body %}
+{#  If the cookie consent module is enabled, include the cookie consent template.
+    This is used to show the cookie consent popup.
+
+    Notice the guest.module_endpoint syntax. The guest API is injected into the template context.
+    This means that you can access the API from anywhere in the template.
+
+    The guest API holds public information about the system. For example, the company details, enabled modules, etc.
+    You can find out more about the guest API here: https://fossbilling.org/docs/api/guest
+
+    In this case, we are querying the "is_on" endpoint of the "extension" module to check if the "cookieconsent" module is enabled.
+    You can replicate this in your browser by going to http://localhost/api/guest/extension/is_on?mod=cookieconsent
+
+    API calls made from the template will be done internally while the page is being rendered.
+    This means that the request won't be sent through the browser and won't be visible in the network tab. #}
+    {% if guest.extension_is_on({ "mod": "cookieconsent" }) %}
+        {% include 'mod_cookieconsent_index.html.twig' ignore missing %}
+    {% endif %}
+
+{#  We are using the "include" tag to include the header and sidebar templates.
+    You can edit the header and sidebar templates in the partials folder.
+
+    If you want to create a new template, you can do so by creating a new file in the partials folder. #}
+    {% include 'partials/header.html.twig' %}
+
+    <div class="page-wrapper">
+        {# Content header #}
+        {% block page_header %}
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <h2 class="page-title">
+                            {{ block('meta_title') }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+        {# Content body #}
+        <div class="page-body">
+            <div class="container-xl">
+                {% block content_before %}{% endblock %}
+                <div class="content">
+                    {% block content %}{% endblock %}
+                </div>
+                {% block content_after %}{% endblock %}   
+            </div>
+        </div>
+        {% include 'partials/footer.html.twig' %}
+    </div>
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,47 @@
+{# In this case, we are querying the "company" endpoint of the "system" module to get the company details.
+You can replicate this in your browser by going to http://localhost/api/guest/system/company
+
+Then, we are saving the result in a variable called "company". This variable can be used in the template. #}
+{% set company = guest.system_company %}
+
+<div>
+    {% include 'partials/announcement.html.twig' %}
+
+    <header class="navbar navbar-light py-3 border-bottom">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="{{ "/" | link }}" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
+                {% if company.logo_url %}
+                    <img src="{{company.logo_url}}" alt="{{company.name}}" title="{{company.name}}" height="35px"/>
+                {% else %}
+                    <span class="fs-4">{{company.name}}</span>
+                {% endif %}
+            </a>
+            <span class="col-12 col-lg-auto mb-3 mb-lg-0">
+            {% if client %}
+            {% set profile = client.profile_get %}
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+                        <span class="avatar avatar-sm" style="background-image: url({{ profile.email|gravatar }}&size=32)"></span>
+                        <div class="d-none d-xl-block ps-2">
+                            <div>{{ profile.first_name }} {{ profile.last_name }}</div>
+                            {% if profile.company %}
+                                <div class="mt-1 small text-muted">{{ profile.company }}</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <a href="{{ '/client/profile' | link }}" class="dropdown-item">{{ 'My account' | trans }}</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ '/client/logout' | link }}" class="dropdown-item">{{ 'Logout' | trans }}</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ 'login' | link }}" class="btn btn-light text-dark me-2">{{ 'Login' | trans }}</a>
+                <a href="{{ 'signup' | link }}" class="btn btn-primary">{{ 'Register' | trans }}</a>
+            {% endif %}
+            </span>
+        </div>
+    </header>
+
+    {% include 'partials/navbar_links.html.twig' %}
+</div>

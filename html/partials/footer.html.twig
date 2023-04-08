@@ -1,0 +1,22 @@
+{# In this case, we are querying the "company" endpoint of the "system" module to get the company details.
+You can replicate this in your browser by going to http://localhost/api/guest/system/company
+
+Then, we are saving the result in a variable called "company". This variable can be used in the template. #}
+{% set company = guest.system_company %}
+
+<div class="container">
+	<footer class="d-flex flex-wrap justify-content-between align-items-center pt-3 mb-2 mt-4 border-top">
+		<p class="col-md-4 mb-0 text-body-secondary">© {{ 'now' | date('Y') }} {{ company.name }}</p>
+		{% if guest.extension_is_on({"mod":'branding'}) %}
+		<a href="https://fossbilling.org" target="_blank" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-body-secondary text-decoration-none">
+		    <i class="fa-solid fa-heart me-2"></i> {{ 'Powered by the FOSSBilling Community' | trans }}
+		</a>
+		{% endif %}
+		<ul class="nav col-md-4 justify-content-end">
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About us</a></li>
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Terms of Services</a></li>
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Privacy policy</a></li>
+		</ul>
+		<br/>
+	</footer>
+</div>

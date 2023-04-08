@@ -1,0 +1,15 @@
+{% extends "layout_default.html.twig" %}
+
+{% block meta_title %}{{ 'An error occurred' | trans }}{% endblock %}
+
+{% block body %}
+{#  A modified version of https://bootsnipp.com/snippets/qr73D
+    Licensed under the MIT license: https://bootsnipp.com/license #}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <h1 class="me-3 pe-3 align-top border-end inline-block align-content-center">{{ exception.getCode | default("404") }}</h1>
+    <div class="align-middle inline-block">
+    	<h2 class="fw-normal lead">{{ exception.getMessage }}</h2>
+        <a href="{{ '/' | link}}" class="text-decoration-none">{{ 'Go back to the homepage' | trans }} <i class="fa-solid fa-arrow-right ms-1"></i></a>
+    </div>
+</div>
+{% endblock %}
