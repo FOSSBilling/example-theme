@@ -3,5 +3,6 @@
     "version": "1.0.0",
     "description": "An example theme for FOSSBilling. The barebones for a custom theme.",
     "author": "evrifaessa",
-    "author_url": "https://github.com/evrifaessa"
+    "author_url": "https://github.com/evrifaessa",
+    "use_admin_default_encore": true
 }
