@@ -11,7 +11,7 @@ Then, we are saving the result in a variable called "company". This variable can
         <div class="container d-flex flex-wrap justify-content-center">
             <a href="{{ "/" | link }}" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
                 {% if company.logo_url %}
-                    <img src="{{company.logo_url}}" alt="{{company.name}}" title="{{company.name}}" height="35px"/>
+                    <img class="navbar-brand-image" src="{{company.logo_url}}" alt="{{company.name}}" title="{{company.name}}" height="35px"/>
                 {% else %}
                     <span class="fs-4">{{company.name}}</span>
                 {% endif %}
