@@ -6,7 +6,7 @@
     <title>{% block meta_title %}{{ settings.meta_title }}{% endblock %}</title>
 
     {# These two are used by the API wrapper to make requests #}
-    <meta property="fossbilling:url" content="{{ constant('BB_URL') }}">
+    <meta property="fossbilling:url" content="{{ constant('SYSTEM_URL') }}">
     <meta name="csrf-token" content="{{ CSRFToken }}">
 
     <meta name="description" content="{% block meta_description %}{{ settings.meta_description }}{% endblock %}">
