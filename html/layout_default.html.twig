@@ -12,7 +12,7 @@
     <meta name="description" content="{% block meta_description %}{{ settings.meta_description }}{% endblock %}">
     <meta name="robots" content="{{ settings.meta_robots }}">
     <meta name="author" content="{{ settings.meta_author }}">
-    <meta name="generator" content="FOSSBilling {{ guest.system_version }}">
+    <meta name="generator" content="FOSSBilling">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {# This is a block. Blocks are used for inheritance and act as placeholders at the same time.
@@ -29,7 +29,7 @@
 
     {# Import the API wrapper. This is used to make requests to the API.
     Just like the asset_url filter, always use the library_url filter when referencing files in the library folder.
-    Make sure to check the documentation for the API wrapper: https://fossbilling.org/docs/api/javascript #}
+    Make sure to check the documentation for the API wrapper: https://fossbilling.org/docs/developing-fossbilling/javascript #}
     <script src="{{ "Api/API.js?v=#{guest.system_version}" | library_url }}"></script>
 
     {# Adding another block here so that templates can add their own tags to the head. #}
@@ -41,7 +41,7 @@
 {#  If the cookie consent module is enabled, include the cookie consent template.
     This is used to show the cookie consent popup.
 
-    Notice the guest.module_endpoint syntax. The guest API is injected into the template context.
+    Notice the guest.{module}_{endpoint} syntax. The guest API is injected into the template context.
     This means that you can access the API from anywhere in the template.
 
     The guest API holds public information about the system. For example, the company details, enabled modules, etc.
@@ -53,13 +53,13 @@
     API calls made from the template will be done internally while the page is being rendered.
     This means that the request won't be sent through the browser and won't be visible in the network tab. #}
     {% if guest.extension_is_on({ "mod": "cookieconsent" }) %}
-        {% include 'mod_cookieconsent_index.html.twig' ignore missing %}
+        {{ include('mod_cookieconsent_index.html.twig', ignore_missing: true) }}
     {% endif %}
 
 {#  We are using the "include" tag to include the header and sidebar templates.
     You can edit the header and sidebar templates in the partials folder.
 
-    If you want to create a new template, you can do so by creating a new file in the partials folder. #}
+    If you want to create a new template, you can create a new file in the html folder. #}
     {% include 'partials/header.html.twig' %}
 
     <div class="page-wrapper">

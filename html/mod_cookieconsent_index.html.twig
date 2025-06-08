@@ -1,0 +1,24 @@
+<div class="offcanvas offcanvas-bottom h-auto show" tabindex="-1" id="cookie-consent-block" aria-modal="true" role="dialog">
+    <div class="offcanvas-body">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    {{ guest.cookieconsent_message }}
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="close-cookie-consent-btn" class="btn btn-primary" data-bs-dismiss="offcanvas">Allow All Cookies</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (localStorage.getItem("cookie-consent") === "1") {
+        document.getElementById("cookie-consent-block").classList.remove("show");
+    }
+    document.getElementById("close-cookie-consent-btn").addEventListener("click", () => {
+        localStorage.setItem("cookie-consent", "1");
+        document.getElementById("cookie-consent-block").classList.remove("show");
+    });
+</script>

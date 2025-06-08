@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block meta_title %}{{ settings.meta_title }}{% endblock %}</title>
+
+    {# To learn what these are for, check the comments in 'layout_default.html.twig'. #}
+    <meta property="fossbilling:url" content="{{ constant('SYSTEM_URL') }}">
+    <meta name="csrf-token" content="{{ CSRFToken }}">
+
+    <meta name="description" content="{% block meta_description %}{{ settings.meta_description }}{% endblock %}">
+    <meta name="robots" content="{{ settings.meta_robots }}">
+    <meta name="author" content="{{ settings.meta_author }}">
+    <meta name="generator" content="FOSSBilling">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block opengraph %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css">
+
+    <link rel='stylesheet' type='text/css' href="{{ 'css/main.css' | asset_url }}">
+
+    <script src="{{ "Api/API.js?v=#{guest.system_version}" | library_url }}"></script>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    {% if guest.extension_is_on({ "mod": "cookieconsent" }) %}
+        {{ include('mod_cookieconsent_index.html.twig', ignore_missing: true) }}
+    {% endif %}
+    {% block body %}{% endblock %}
+</body>
+</html>

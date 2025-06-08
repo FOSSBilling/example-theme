@@ -9,13 +9,14 @@ Then, we are saving the result in a variable called "company". This variable can
 		<p class="col-md-4 mb-0 text-body-secondary">© {{ 'now' | date('Y') }} {{ company.name }}</p>
 		{% if guest.extension_is_on({"mod":'branding'}) %}
 		<a href="https://fossbilling.org" target="_blank" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-body-secondary text-decoration-none">
-		    <i class="fa-solid fa-heart me-2"></i> {{ 'Powered by the FOSSBilling Community' | trans }}
+			<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-heart me-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+			{{ 'Powered by the FOSSBilling Community' | trans }}
 		</a>
 		{% endif %}
 		<ul class="nav col-md-4 justify-content-end">
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About us</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Terms of Services</a></li>
-			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Privacy policy</a></li>
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ 'About us'|trans }}</a></li>
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ 'Terms of Services'|trans }}</a></li>
+			<li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">{{ 'Privacy policy'|trans }}</a></li>
 		</ul>
 		<br/>
 	</footer>
