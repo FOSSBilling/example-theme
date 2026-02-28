@@ -88,6 +88,22 @@ const FOSSBilling = {
 
 
 var bb = {
+    /**
+     * Escape a string for safe insertion into HTML context.
+     * @param {string} str
+     * @returns {string}
+     */
+    escapeHtml: function(str) {
+        if (str === null || str === undefined) {
+            return '';
+        }
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
     redirect: function(url) {
         if(url === undefined) {
             window.location = $('meta[property="bb:url"]').attr("content");
@@ -140,7 +156,7 @@ var bb = {
         });
     },
     msg: function(txt, type) {
-        $.jGrowl(txt);
+        $.jGrowl(bb.escapeHtml(txt));
     },
     apiForm: function() {
         $("form.api_form, form.api-form").bind('submit', function(){
