@@ -104,11 +104,40 @@ var bb = {
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
     },
+    /**
+     * Determine whether a URL is safe to use as a redirect target.
+     * Only same-origin and relative URLs are allowed.
+     * @param {string} url
+     * @returns {boolean}
+     */
+    isSafeRedirectUrl: function(url) {
+        if (typeof url !== 'string') {
+            return false;
+        }
+        var trimmed = url.trim();
+        if (trimmed === '') {
+            return false;
+        }
+        // Allow relative URLs (path, query, or fragment)
+        if (trimmed.charAt(0) === '/' || trimmed.charAt(0) === '?' || trimmed.charAt(0) === '#') {
+            return true;
+        }
+        try {
+            var parsed = new URL(trimmed, window.location.href);
+            return parsed.origin === window.location.origin;
+        } catch (e) {
+            return false;
+        }
+    },
     redirect: function(url) {
-        if(url === undefined) {
-            window.location = $('meta[property="bb:url"]').attr("content");
-        } else {
+        var baseUrl = $('meta[property="bb:url"]').attr("content");
+        if (url === undefined) {
+            window.location = baseUrl;
+        } else if (bb.isSafeRedirectUrl(url)) {
             window.location = url;
+        } else {
+            // Fallback to a safe default if the provided URL is not allowed
+            window.location = baseUrl;
         }
     },
     currency: function(price, rate, title, multiply) {
