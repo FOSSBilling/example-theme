@@ -9,7 +9,7 @@ const FOSSBilling = {
             return endpoint;
         }
 
-        return document.querySelector('meta[property="fossbilling:url"]').getAttribute("content") + 'api/' + url;
+        return document.querySelector('meta[property="fossbilling:url"]').getAttribute("content") + 'api/' + endpoint;
     },
     /**
      * Reload the page.
@@ -118,10 +118,6 @@ var bb = {
         if (trimmed === '') {
             return false;
         }
-        // Allow relative URLs (path, query, or fragment)
-        if (trimmed.charAt(0) === '/' || trimmed.charAt(0) === '?' || trimmed.charAt(0) === '#') {
-            return true;
-        }
         try {
             var parsed = new URL(trimmed, window.location.href);
             return parsed.origin === window.location.origin;
@@ -131,13 +127,18 @@ var bb = {
     },
     redirect: function(url) {
         var baseUrl = $('meta[property="bb:url"]').attr("content");
-        if (url === undefined) {
-            window.location = baseUrl;
-        } else if (bb.isSafeRedirectUrl(url)) {
-            window.location = url;
+        // Default to the base URL when no redirect target is provided
+        if (url === undefined || url === null) {
+            window.location.href = baseUrl;
+            return;
+        }
+        // Normalize to string and trim whitespace before validation
+        var target = String(url).trim();
+        if (bb.isSafeRedirectUrl(target)) {
+            window.location.href = new URL(target, window.location.href).href;
         } else {
             // Fallback to a safe default if the provided URL is not allowed
-            window.location = baseUrl;
+            window.location.href = baseUrl;
         }
     },
     currency: function(price, rate, title, multiply) {
