@@ -131,10 +131,15 @@ var bb = {
     },
     redirect: function(url) {
         var baseUrl = $('meta[property="bb:url"]').attr("content");
-        if (url === undefined) {
+        // Default to the base URL when no redirect target is provided
+        if (url === undefined || url === null) {
             window.location = baseUrl;
-        } else if (bb.isSafeRedirectUrl(url)) {
-            window.location = url;
+            return;
+        }
+        // Normalize to string and trim whitespace before validation
+        var target = String(url).trim();
+        if (bb.isSafeRedirectUrl(target)) {
+            window.location = target;
         } else {
             // Fallback to a safe default if the provided URL is not allowed
             window.location = baseUrl;
