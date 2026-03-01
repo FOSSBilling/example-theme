@@ -9,7 +9,7 @@ const FOSSBilling = {
             return endpoint;
         }
 
-        return document.querySelector('meta[property="fossbilling:url"]').getAttribute("content") + 'api/' + url;
+        return document.querySelector('meta[property="fossbilling:url"]').getAttribute("content") + 'api/' + endpoint;
     },
     /**
      * Reload the page.
