@@ -15,7 +15,7 @@ const FOSSBilling = {
      * Reload the page.
      */
     reload: function() {
-        location.reload(false);
+        location.reload();
     },
     /**
      * Redirect to a URL.
@@ -28,6 +28,7 @@ const FOSSBilling = {
     redirect: function (url) {
         if (url === undefined) {
             this.reload();
+            return;
         }
         window.location = url;
     },
@@ -69,8 +70,13 @@ const FOSSBilling = {
                   <strong class="me-auto">System message</strong>
                   <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
               </div>
-              <div class="toast-body">${message}</div>
+              <div class="toast-body"></div>
           `;
+
+      const toastBody = element.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.textContent = message;
+      }
   
       element.addEventListener('hidden.bs.toast', () => {
         container.remove();
@@ -251,14 +257,16 @@ var bb = {
     },
     MenuAutoActive: function() {
         var matches = $('ul.main li a').filter(function() {
-            return document.location.href == this.href;
+            return document.location.href === this.href;
         });
         matches.parents('li').addClass('active');
     },
     cookieCreate: function (name,value,days) {
         if (days) {
             var date = new Date();
-            date.setTime(date.getTime()+(days*24*60*60*1000));
+            // Number of milliseconds in one day
+            var MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+            date.setTime(date.getTime() + (days * MILLISECONDS_PER_DAY));
             var expires = "; expires="+date.toGMTString();
         }
         else var expires = "";
