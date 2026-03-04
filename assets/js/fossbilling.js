@@ -258,7 +258,9 @@ var bb = {
     cookieCreate: function (name,value,days) {
         if (days) {
             var date = new Date();
-            date.setTime(date.getTime()+(days*24*60*60*1000));
+            // Number of milliseconds in one day
+            var MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+            date.setTime(date.getTime() + (days * MILLISECONDS_PER_DAY));
             var expires = "; expires="+date.toGMTString();
         }
         else var expires = "";
