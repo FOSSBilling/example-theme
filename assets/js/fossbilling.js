@@ -251,7 +251,7 @@ var bb = {
     },
     MenuAutoActive: function() {
         var matches = $('ul.main li a').filter(function() {
-            return document.location.href == this.href;
+            return document.location.href === this.href;
         });
         matches.parents('li').addClass('active');
     },
