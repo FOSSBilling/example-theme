@@ -69,8 +69,13 @@ const FOSSBilling = {
                   <strong class="me-auto">System message</strong>
                   <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
               </div>
-              <div class="toast-body">${message}</div>
+              <div class="toast-body"></div>
           `;
+
+      const toastBody = element.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.textContent = message;
+      }
   
       element.addEventListener('hidden.bs.toast', () => {
         container.remove();
