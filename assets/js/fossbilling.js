@@ -15,7 +15,7 @@ const FOSSBilling = {
      * Reload the page.
      */
     reload: function() {
-        location.reload(false);
+        location.reload();
     },
     /**
      * Redirect to a URL.
