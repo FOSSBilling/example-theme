@@ -28,6 +28,7 @@ const FOSSBilling = {
     redirect: function (url) {
         if (url === undefined) {
             this.reload();
+            return;
         }
         window.location = url;
     },
